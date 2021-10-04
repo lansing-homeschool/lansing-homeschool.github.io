@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Cargo Connect Mission Model Build Instructions
-date: 2021-10-04T19:07:17.173Z
+date: 2021-10-03T19:07:17.173Z
 author: Brendon Thiede
 categories: [FLL]
 tags: [FLL, Cargo Connect, Challenge]
