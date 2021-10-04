@@ -1,4 +1,4 @@
-# lansing-homeschool.github.io
+# [lansing-homeschool.github.io](https://lansing-homeschool.github.io)
 
 A GitHub Pages site for sharing information about the Lansing Homeschool Hackers program, including FIRST LEGO League.
 

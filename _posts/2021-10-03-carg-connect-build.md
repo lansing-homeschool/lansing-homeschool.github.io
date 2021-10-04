@@ -10,9 +10,11 @@ comments: true
 
 Here are links to the build instructions for Cargo Connect Challenge "Mission Models" (originally from FLL [Season Resources](https://www.firstlegoleague.org/season#resources)):
 
-* [All PDFs in a Single Zip](https://drive.google.com/file/d/1TtMmcb1OOo_MJL1m9qzvQhGAr-bNCEtd/view?usp=sharing)
-* [Element Overview](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/building-instructions/enus/fll-challenge-cargo-connect-45816-eop-web-enus.pdf)
-* [Prepack Overview](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/building-instructions/enus/fll-challenge-cargo-connect-45816-model-pre-pack-web-enus.pdf)
+* All PDFs in a Single Zip
+  * [Download](https://drive.google.com/uc?id=12kLvYmYrF7jyIj6gt1_z_i9Cm9DCWqMy&export=download)
+  * [View](https://drive.google.com/file/d/12kLvYmYrF7jyIj6gt1_z_i9Cm9DCWqMy/view?usp=sharing)
+* [Element Overview (parts list)](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/building-instructions/enus/fll-challenge-cargo-connect-45816-eop-web-enus.pdf)
+* [Prepack Overview (model overview)](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/building-instructions/enus/fll-challenge-cargo-connect-45816-model-pre-pack-web-enus.pdf)
 * [Bag 1](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/building-instructions/enus/fll-challenge-cargo-connect-45816-book1-3104-web-enus.pdf)
 * [Bag 2](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/building-instructions/enus/fll-challenge-cargo-connect-45816-book2-3104-web-enus.pdf)
 * [Bag 3](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/building-instructions/enus/fll-challenge-cargo-connect-45816-book3-3104-web-enus.pdf)
