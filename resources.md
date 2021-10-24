@@ -30,23 +30,24 @@ FIRST LEGO® League is an alliance between FIRST & the LEGO® Group. FLL teams r
 
 ---
 
-### Cargo Connect (2021 Challenge)
+## Cargo Connect (2021-22 Challenge)
 
-* [Online Robot Challenge Scorer](http://flltutorials.com/Resources/2018/scorer/index.html)
-* [Official Into Orbit Info Page](https://info.firstinspires.org/into-orbit)
-* [Challenge Letter (project details are on the last page)](https://firstinspiresst01.blob.core.windows.net/fll/2019/FIRST-FLL-2018-19-Challenge-Letter.pdf)
-* [Challenge Guide Letter (more detailed than the Challenge Letter)](https://firstinspiresst01.blob.core.windows.net/fll/2019/FIRST-FLL-2018-19-ChallengeGuide-Letter.pdf)
-* [Scoring Rubric for Into Orbit](http://www.firstlegoleague.org/sites/default/files/into-orbit/first-lego-league-rubrics.pdf)
-* [Event Guide for Teams](https://firstinspiresst01.blob.core.windows.net/fll/2019/fll-event-guide.pdf)
-* [Coaches' Handbook](https://www.firstinspires.org/sites/default/files/uploads/resource_library/fll/into-orbit/first-lego-league-coaches-handbook-20182019.pdf)
-* [Engineering Notebook (for team members to track their notes, experiments, and progress)](https://firstinspiresst01.blob.core.windows.net/fll/2019/FIRST-FLL-2018-19-EngNotebook-Letter.pdf)
-* [Brendon's Into Orbit YouTube Playlist](https://www.youtube.com/playlist?list=PLhyXKCvo9b0LSKD4XQIlIrDaksb_67cqT)
-* [Ideas for Projects](https://fllblog.wordpress.com/2018/11/09/almost-infinite-resources/)
-* [Tips and Tricks for Challenges](https://www.fllcasts.com/competitions/first-lego-league/2018-into-orbit/tips-and-tricks)
-
-Robot Game Table
-
-![Into Orbit Table Overview](/assets/uploads/into-orbit-table-overview.jpg)
+* [Challenge Resources](https://www.firstinspires.org/resource-library/fll/challenge/challenge-and-resources)
+  * [Challenge Overview](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/fll-challenge-cargo-connect-overview.pdf)
+  * [Engineering Notebook](https://info.firstinspires.org/hubfs/Education_Resources/CARGO%20CONNECT/CARGO%20CONNECT%20Challenge%20EN%20(regular).pdf)
+  * [Engineering Notebook Assessment](https://www.firstinspires.org/sites/default/files/uploads/resource_library/ftc/eng-notebook-self-assessment.pdf)
+  * [Robot Game Missions Video](https://youtu.be/onsI9ke2Vho)
+  * [Robot Game Rulebook](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/fll-challenge-cargo-connect-robot-game-rulebook.pdf)
+  * [Challenge Updates](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/fll-challenge-cargo-connect-challenge-updates.pdf)
+  * [Scoring Rubric](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/fll-challenge-cargo-connect-rubrics-2021-22-greyscale.pdf)
+  * [FLLCasts (Tips and tricks)](https://www.fllcasts.com/)
+  * [FLL Tutorials - Robot Designs and Lessons](https://flltutorials.com/en/RobotGame.html)
+* [Explore Resources](https://www.firstinspires.org/resource-library/fll/explore/challenge-and-resources)
+  * [Explore Overview](https://www.firstinspires.org/sites/default/files/uploads/resource_library/first-lego-league-explore-how-it-works.pdf)
+  * [Mini Brochure](https://www.firstinspires.org/sites/default/files/uploads/resource_library/first-lego-league-explore-mini-fe003.pdf)
+  * [Team Journey and Challenge Story](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-explore/fll-explore-cargo-connect-challenge-story.pdf)
+  * [Model Building Instructions Book 1](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-explore/fll-explore-cargo-connect-building-instruction-bk1-bi-45817.pdf)
+  * [Model Building Instructions Book 2](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-explore/fll-explore-cargo-connect-building-instruction-bk2-bi-45817.pdf)
 
 ---
 
