@@ -6,13 +6,8 @@
         <h1>./{% if page.layout == 'post' %}Blog{% else %}{{ page.title }}{% endif %}</h1>
         {{ content }}
       </section>
-      <section>
-        <h2>Thanks to our teams' sponsors:</h2>
-        <div>
-          <a href="https://www.ford.com"><img src="/assets/uploads/ford.png" alt="Ford"></a>
-        </div>
-      </section>
       {% include comments.html %}
+      {% include sponsors.html %}
     </div>
 {% include js-includes.html %}
 {% include google-analytics.html %}
