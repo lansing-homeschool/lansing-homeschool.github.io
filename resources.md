@@ -17,7 +17,7 @@ FIRST is the higher level organization that encompasses FIRST LEGO® League Jr.,
 
 ## FIRST LEGO® League (FLL)
 
-FIRST LEGO® League is an alliance between FIRST & the LEGO® Group. FLL teams research a real-world problem such as food safety, recycling, energy, etc., and are challenged to develop a solution. They also must design, build, program a robot using LEGO® MINDSTORMS® technology, then compete on a table-top playing field.
+FIRST LEGO® League is an alliance between FIRST & the LEGO® Group. FLL teams research a real-world problem related to the theme, and are challenged to develop a solution. For the _Challenge_ level, they also must design, build, program a robot using LEGO® MINDSTORMS® technology, then compete on a table-top playing field.
 
 * [What is FIRST LEGO® League](http://www.firstlegoleague.org/about-fll)
 * [Official FLL Main Page](https://www.firstinspires.org/robotics/fll)
@@ -26,7 +26,9 @@ FIRST LEGO® League is an alliance between FIRST & the LEGO® Group. FLL teams r
 * [Project - How To Videos (describes what you need to do for a project)](https://www.youtube.com/watch?v=r229WGU_zbA&list=PLD25D83E836AB3AEB)
 * [Basic Robot Build Instructions](https://education.lego.com/en-us/support/mindstorms-ev3/building-instructions#robot)
 * [More complex robot with modular attachments](https://www.startingpoints.com/first-lego-league-ev3-robot-design-startingpoints-robo?category=firstlegoleague/robot/robot-designs)
-* [Lesson Plans (can be used as practice activities)](https://education.lego.com/en-us/lessons?Products=LEGO%20MINDSTORMS%20Education%20EV3%20Core%20Set&pagesize=12&Subjects=Robotics)
+* [Lesson Plans (can be used as practice activities)](https://education.lego.com/en-us/lessons?products=SPIKE%E2%84%A2+Prime+Set&pagesize=12&Subjects=Robotics&grades=Grades+6-8)
+* [FLLCasts (Tips and tricks)](https://www.fllcasts.com/)
+* [FLL Tutorials - Robot Designs and Lessons](https://flltutorials.com/en/RobotGame.html)
 
 ---
 
@@ -40,8 +42,6 @@ FIRST LEGO® League is an alliance between FIRST & the LEGO® Group. FLL teams r
   * [Robot Game Rulebook](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/fll-challenge-cargo-connect-robot-game-rulebook.pdf)
   * [Challenge Updates](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/fll-challenge-cargo-connect-challenge-updates.pdf)
   * [Scoring Rubric](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/fll-challenge-cargo-connect-rubrics-2021-22-greyscale.pdf)
-  * [FLLCasts (Tips and tricks)](https://www.fllcasts.com/)
-  * [FLL Tutorials - Robot Designs and Lessons](https://flltutorials.com/en/RobotGame.html)
 * [Explore Resources](https://www.firstinspires.org/resource-library/fll/explore/challenge-and-resources)
   * [Explore Overview](https://www.firstinspires.org/sites/default/files/uploads/resource_library/first-lego-league-explore-how-it-works.pdf)
   * [Mini Brochure](https://www.firstinspires.org/sites/default/files/uploads/resource_library/first-lego-league-explore-mini-fe003.pdf)
