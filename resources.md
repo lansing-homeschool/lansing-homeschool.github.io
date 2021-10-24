@@ -23,12 +23,9 @@ FIRST LEGO® League is an alliance between FIRST & the LEGO® Group. FLL teams r
 * [Official FLL Main Page](https://www.firstinspires.org/robotics/fll)
 * [Run a Team (information about starting a team)](http://firstinmichigan.us/FLL/run-a-team/)
 * [FLL Challenge Information](http://www.firstlegoleague.org/challenge)
-* [Project - How To Videos (describes what you need to do for a project)](https://www.youtube.com/watch?v=r229WGU_zbA&list=PLD25D83E836AB3AEB)
 * [Basic Robot Build Instructions](https://education.lego.com/en-us/support/mindstorms-ev3/building-instructions#robot)
 * [More complex robot with modular attachments](https://www.startingpoints.com/first-lego-league-ev3-robot-design-startingpoints-robo?category=firstlegoleague/robot/robot-designs)
 * [Lesson Plans (can be used as practice activities)](https://education.lego.com/en-us/lessons?products=SPIKE%E2%84%A2+Prime+Set&pagesize=12&Subjects=Robotics&grades=Grades+6-8)
-* [FLLCasts (Tips and tricks)](https://www.fllcasts.com/)
-* [FLL Tutorials - Robot Designs and Lessons](https://flltutorials.com/en/RobotGame.html)
 
 ---
 
@@ -56,3 +53,19 @@ FIRST LEGO® League is an alliance between FIRST & the LEGO® Group. FLL teams r
 * [Programming LEGO® EV3 My Blocks: Teaching Concepts and Preparing for FLL® Competition (CADL)](https://opac.cadl.org/search/?searchtype=X&SORT=D&searchscope=15&searcharg=Programming+LEGO+EV3+My+Blocks)
 * [The Art of LEGO® Mindstorms® EV3 Programming (CADL)](https://opac.cadl.org/search~S15/?searchtype=X&searcharg=The+art+of+LEGO+Mindstorms+EV3+programming&searchscope=15&sortdropdown=-&SORT=DZ&extended=0&SUBMIT=Search&searchlimits=&searchorigarg=Xthe+art+of+mindstorms)
 * [The LEGO® Mindstorms® EV3 Idea Book: 181 Simple Machines and Clever Contraptions (CADL)](https://opac.cadl.org/search~S15/?searchtype=X&searcharg=The+LEGO%C2%AE+Mindstorms%C2%AE+EV3+Idea+Book%3A+181+Simple+Machines+and+Clever+Contrap&searchscope=15&sortdropdown=-&SORT=DZ&extended=0&SUBMIT=Search&searchlimits=&searchorigarg=XThe+art+of+LEGO+Mindstorms+EV3+programming%26SORT%3DDZ)
+
+---
+
+## Miscellaneous
+
+### [Mr. Hino's Lego Robotics](https://www.youtube.com/channel/UCvuw_UluXNRPKhqK5GU8SrQ/videos)
+
+YouTube content about the current FLL Challenge season as well as other experiments, usually using the EV3, not the Spike Prime.
+
+### [FLLCasts](https://www.fllcasts.com/)
+
+Tips and tricks for the current season and starter ideas for competition robots.
+
+### [FLL Tutorials - Robot Designs and Lessons](https://flltutorials.com/en/RobotGame.html)
+
+Several robot designs along with lessons for different techniques for navigating the field (line finding, line following, wall following, etc.).
