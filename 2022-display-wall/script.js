@@ -65,17 +65,17 @@ function format(node, level) {
 function initializeWall() {
     const wall = document.getElementById('wall');
 
-    let rowwithoutBlankslate = document.createElement('div');
-    rowwithoutBlankslate.classList.add('row');
-    let pixelwithoutBlankslate = document.createElement('div');
-    pixelwithoutBlankslate.classList.add('pixel');
+    let rowTemplate = document.createElement('div');
+    rowTemplate.classList.add('row');
+    let pixelTemplate = document.createElement('div');
+    pixelTemplate.classList.add('pixel');
 
     for (let col = 0; col < wallWidth; col++) {
-        rowwithoutBlankslate.appendChild(pixelwithoutBlankslate.cloneNode(true));
+        rowTemplate.appendChild(pixelTemplate.cloneNode(true));
     }
 
     for (let row = 0; row < wallHeight; row++) {
-        wall.appendChild(rowwithoutBlankslate.cloneNode(true));
+        wall.appendChild(rowTemplate.cloneNode(true));
     }
 
     document.querySelectorAll('.pixel').forEach(pixel => {
@@ -87,10 +87,10 @@ function initializeWall() {
 
 function initializePallet() {
     const pallet = document.getElementById('pallet');
-    const palletItemwithoutBlankslate = document.createElement('div');
-    palletItemwithoutBlankslate.classList.add('pallet');
+    const palletItemTemplate = document.createElement('div');
+    palletItemTemplate.classList.add('pallet');
     palletColors.forEach(color => {
-        let palletItem = palletItemwithoutBlankslate.cloneNode(true);
+        let palletItem = palletItemTemplate.cloneNode(true);
         palletItem.style.backgroundColor = color;
         palletItem.onclick = function () {
             pickColor(color);
