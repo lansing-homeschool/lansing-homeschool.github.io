@@ -11,14 +11,16 @@
 </head>
 
 <body>
-    <div id="pallet"></div>
+    <div id="decorations"></div>
     <div id="wall"></div>
-    <label for="code">:)</label>
-    <textarea name="code" id="code" cols="80" rows="72"></textarea>
+    <div id="code-wrapper" style="display: none;">
+        <label for="code">:)</label>
+        <textarea name="code" id="code" cols="80" rows="72"></textarea>
+    </div>
 
     <script>
+        initializeDecorations();
         initializeWall();
-        initializePallet();
     </script>
 </body>
 

@@ -1,26 +1,53 @@
 const wallWidth = 10;
 const wallHeight = 6;
 
-const palletColors = [
-    '#cc0000', // red
-    '#ffff66', // yellow
-    '#3399ff', // blue
-    '#33cc33', // green
-    '#e8e8e8', // gray
-    '#ffffff', // white
-    '#000000', // black
-    '#e6f2ff', // translucent blue
-    '#ffffff' // white with red swirl
-]
+const decorationsList = [
+    { 'image': 'black-circle', 'count': 5 },
+    { 'image': 'black-quarter', 'count': 11 },
+    { 'image': 'black-square', 'count': 11 },
+    { 'image': 'blue-quarter', 'count': 11 },
+    { 'image': 'blue-square', 'count': 11 },
+    { 'image': 'crystal-circle', 'count': 5 },
+    { 'image': 'gray-quarter', 'count': 10 },
+    { 'image': 'gray-square', 'count': 11 },
+    { 'image': 'gray-tombstone', 'count': 5 },
+    { 'image': 'green-quarter', 'count': 11 },
+    { 'image': 'green-square', 'count': 11 },
+    { 'image': 'green-tombstone', 'count': 5 },
+    { 'image': 'orange-heart', 'count': 5 },
+    { 'image': 'orange-quarter', 'count': 11 },
+    { 'image': 'orange-square', 'count': 11 },
+    { 'image': 'red-quarter', 'count': 11 },
+    { 'image': 'red-square', 'count': 11 },
+    { 'image': 'spiral-circle', 'count': 5 },
+    { 'image': 'white-stud', 'count': 5 },
+    { 'image': 'yellow-flower', 'count': 5 },
+    { 'image': 'yellow-quarter', 'count': 11 },
+    { 'image': 'yellow-square', 'count': 11 }
+];
 
-let currentColor = '#cc0000';
+let currentDecoration = decorationsList[0];
 
-function pickColor(color) {
-    currentColor = color;
+function pickDecoration(decoration) {
+    currentDecoration = decoration;
 }
 
-function setPixelColor(pixel) {
-    pixel.style.backgroundColor = currentColor;
+function setPixelImage(pixel) {
+    const newImageUrl = `url("images/${currentDecoration.image}.png")`;
+    if (newImageUrl === pixel.style.backgroundImage) {
+        const currentRotation = pixel.style.transform;
+        let newRotation = 'rotate(90deg)';
+        if (currentRotation === 'rotate(90deg)') {
+            newRotation = 'rotate(180deg)';
+        } else if (currentRotation === 'rotate(180deg)') {
+            newRotation = 'rotate(270deg)';
+        } else if (currentRotation === 'rotate(270deg)') {
+            newRotation = '';
+        }
+        pixel.style.transform = newRotation;
+    } else {
+        pixel.style.backgroundImage = `url("images/${currentDecoration.image}.png")`;
+    }
     updateCode();
 }
 
@@ -29,6 +56,7 @@ function updateCode() {
     const code = document.getElementById('code');
     code.innerText = format(wall, 0).innerHTML;
     code.innerHTML = removeBlanks(code);
+    document.getElementById('code-wrapper').style.display = 'inline'
 }
 
 function removeBlanks(node) {
@@ -80,21 +108,21 @@ function initializeWall() {
 
     document.querySelectorAll('.pixel').forEach(pixel => {
         pixel.onclick = function () {
-            setPixelColor(this);
+            setPixelImage(this);
         };
     });
 }
 
-function initializePallet() {
-    const pallet = document.getElementById('pallet');
-    const palletItemTemplate = document.createElement('div');
-    palletItemTemplate.classList.add('pallet');
-    palletColors.forEach(color => {
-        let palletItem = palletItemTemplate.cloneNode(true);
-        palletItem.style.backgroundColor = color;
-        palletItem.onclick = function () {
-            pickColor(color);
+function initializeDecorations() {
+    const decorations = document.getElementById('decorations');
+    const decorationTemplate = document.createElement('div');
+    decorationTemplate.classList.add('decoration');
+    decorationsList.forEach(decoration => {
+        let decorationItem = decorationTemplate.cloneNode(true);
+        decorationItem.style.backgroundImage = `url("images/${decoration.image}.png")`;
+        decorationItem.onclick = function () {
+            pickDecoration(decoration);
         };
-        pallet.appendChild(palletItem);
+        decorations.appendChild(decorationItem);
     });
 }
