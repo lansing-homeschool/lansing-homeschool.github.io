@@ -33,20 +33,24 @@ function pickDecoration(decoration) {
 }
 
 function setPixelImage(pixel) {
-    const newImageUrl = `url("images/${currentDecoration.image}.png")`;
-    if (newImageUrl === pixel.style.backgroundImage) {
-        const currentRotation = pixel.style.transform;
-        let newRotation = 'rotate(90deg)';
-        if (currentRotation === 'rotate(90deg)') {
-            newRotation = 'rotate(180deg)';
-        } else if (currentRotation === 'rotate(180deg)') {
-            newRotation = 'rotate(270deg)';
-        } else if (currentRotation === 'rotate(270deg)') {
-            newRotation = '';
-        }
-        pixel.style.transform = newRotation;
+    if (currentDecoration.image === 'eraser') {
+        pixel.style.backgroundImage = '';
     } else {
-        pixel.style.backgroundImage = `url("images/${currentDecoration.image}.png")`;
+        const newImageUrl = `url("images/${currentDecoration.image}.png")`;
+        if (newImageUrl === pixel.style.backgroundImage) {
+            const currentRotation = pixel.style.transform;
+            let newRotation = 'rotate(90deg)';
+            if (currentRotation === 'rotate(90deg)') {
+                newRotation = 'rotate(180deg)';
+            } else if (currentRotation === 'rotate(180deg)') {
+                newRotation = 'rotate(270deg)';
+            } else if (currentRotation === 'rotate(270deg)') {
+                newRotation = '';
+            }
+            pixel.style.transform = newRotation;
+        } else {
+            pixel.style.backgroundImage = `url("images/${currentDecoration.image}.png")`;
+        }
     }
     updateCode();
 }
@@ -116,13 +120,21 @@ function initializeWall() {
 function initializeDecorations() {
     const decorations = document.getElementById('decorations');
     const decorationTemplate = document.createElement('div');
+    let decorationItem;
     decorationTemplate.classList.add('decoration');
     decorationsList.forEach(decoration => {
-        let decorationItem = decorationTemplate.cloneNode(true);
+        decorationItem = decorationTemplate.cloneNode(true);
+        decorationItem.innerHTML = '&nbsp;';
         decorationItem.style.backgroundImage = `url("images/${decoration.image}.png")`;
         decorationItem.onclick = function () {
             pickDecoration(decoration);
         };
         decorations.appendChild(decorationItem);
     });
+    decorationItem = decorationTemplate.cloneNode(true);
+    decorationItem.innerHTML = '<span style="position: relative; top: 20px;">(eraser)</span>';
+    decorationItem.onclick = function () {
+        pickDecoration({ 'image': 'eraser', 'count': (wallHeight * wallWidth) });
+    };
+    decorations.appendChild(decorationItem);
 }
