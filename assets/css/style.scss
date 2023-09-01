@@ -28,3 +28,7 @@ nav.navbar {
   margin-left: 20px;
   margin-right: 20px;
 }
+
+details>summary>p {
+  display: inline;
+}
