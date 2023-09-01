@@ -7,7 +7,7 @@ skipIndexing: true
 ---
 Welcome to the informational site for the Lansing Homeschool Hackers.
 
-The current focus of this site is FIRST LEGO League, specifically the 2021-2022 season.
+The current focus of this site is FIRST LEGO League, specifically the 2023-2024 season.
 
 ## Core Values <small>([link](https://www.firstinspires.org/robotics/fll/core-values))</small>
 
