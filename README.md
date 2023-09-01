@@ -6,10 +6,10 @@ A GitHub Pages site for sharing information about the Lansing Homeschool Hackers
 
 In order to run this locally, you will need to setup Jekyll. [Click here for instructions](https://jekyllrb.com/docs/installation/).
 
-Before starting the local Jekyll the first time you need to run from this directory:
+Before starting the local Jekyll the first time you need to run the following from this directory:
 
 ```powershell
-gem install bundler:1.16.2
+gem install bundler:2.3.24
 bundle install
 ```
 
@@ -18,6 +18,8 @@ To start Jekyll, you can run the following:
 ```powershell
 bundle exec jekyll serve
 ```
+
+With Jekyll running, you can view the site at [http://localhost:4000](http://localhost:4000).
 
 ## Upgrading Ruby Gems
 
