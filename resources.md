@@ -19,17 +19,34 @@ FIRST is the higher level organization that encompasses FIRST LEGO® League Jr.,
 
 FIRST LEGO® League is an alliance between FIRST & the LEGO® Group. FLL teams research a real-world problem related to the theme, and are challenged to develop a solution. For the _Challenge_ level, they also must design, build, program a robot using LEGO® MINDSTORMS® technology, then compete on a table-top playing field.
 
-* [What is FIRST LEGO® League](http://www.firstlegoleague.org/about-fll)
+* [What is FIRST LEGO® League](http://www.firstlegoleague.org/about)
 * [Official FLL Main Page](https://www.firstinspires.org/robotics/fll)
-* [Run a Team (information about starting a team)](http://firstinmichigan.us/FLL/run-a-team/)
-* [FLL Challenge Information](http://www.firstlegoleague.org/challenge)
-* [Basic Robot Build Instructions](https://education.lego.com/en-us/support/mindstorms-ev3/building-instructions#robot)
-* [More complex robot with modular attachments](https://www.startingpoints.com/first-lego-league-ev3-robot-design-startingpoints-robo?category=firstlegoleague/robot/robot-designs)
+* [Run a Challenge Team (information about starting a team)](https://firstinmichigan.us/FLL-Challenge/run-a-team/)
 * [Lesson Plans (can be used as practice activities)](https://education.lego.com/en-us/lessons?products=SPIKE%E2%84%A2+Prime+Set&pagesize=12&Subjects=Robotics&grades=Grades+6-8)
+  * ["Competition Ready" lessons for Spike Prime, specific to FLL](https://education.lego.com/en-us/lessons/prime-competition-ready/)
 
 ---
 
-## Cargo Connect (2021-22 Challenge)
+<details open><summary>Masterpiece (2023-24 Challenge)
+</summary>
+
+* [Challenge Resources](https://www.firstinspires.org/resource-library/fll/challenge/challenge-and-resources)
+  * [YouTube Playlist](https://www.youtube.com/playlist?list=PLpaPRqT711thuVpJL5fGfZ7obxVtgT-GE)
+    * [Robot Game Missions Video](https://youtu.be/zI_vz9YUw1g?si=azDFy3QcXncPlEhh)
+  * [Challenge Overview](https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-challenge-overview.pdf)
+  * [Engineering Notebook](https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-en-eng.pdf)
+    * [Engineering Notebook Assessment (not used directly for Challenge)](https://www.firstinspires.org/sites/default/files/uploads/resource_library/ftc/eng-notebook-self-assessment.pdf)
+  * [Team Meeting Guide](https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-tmg-en.pdf)
+  * [Challenge Field Wire Frame](https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-wireframe-and-grid.pdf)  
+  * [Robot Game Rulebook](https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-rgr-en.pdf)
+  * [Challenge Updates](https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-challenge-updates.pdf)
+  * [Scoring Rubric](https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-rubrics-color.pdf)
+  * [Other resources recommended by FIRST](https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-multimedia-resources.pdf)
+
+</details>
+
+<details><summary>Cargo Connect (2021-22 Challenge)
+</summary>
 
 * [Challenge Resources](https://www.firstinspires.org/resource-library/fll/challenge/challenge-and-resources)
   * [Challenge Overview](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/fll-challenge-cargo-connect-overview.pdf)
@@ -45,6 +62,8 @@ FIRST LEGO® League is an alliance between FIRST & the LEGO® Group. FLL teams r
   * [Team Journey and Challenge Story](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-explore/fll-explore-cargo-connect-challenge-story.pdf)
   * [Model Building Instructions Book 1](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-explore/fll-explore-cargo-connect-building-instruction-bk1-bi-45817.pdf)
   * [Model Building Instructions Book 2](https://firstinspiresst01.blob.core.windows.net/first-forward/fll-explore/fll-explore-cargo-connect-building-instruction-bk2-bi-45817.pdf)
+
+</details>
 
 ---
 
