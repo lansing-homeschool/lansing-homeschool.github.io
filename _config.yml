@@ -15,3 +15,7 @@ disqus:
   shortname: lansing-homeschool
 plugins:
   - jekyll-feed
+markdown: kramdown
+kramdown:
+  parse_block_html: true
+  syntax_highlighter: rouge
