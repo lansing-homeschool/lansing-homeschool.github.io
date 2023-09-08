@@ -20,6 +20,7 @@ FIRST is the higher level organization that encompasses FIRST LEGO® League Jr.,
 FIRST LEGO® League is an alliance between FIRST & the LEGO® Group. FLL teams research a real-world problem related to the theme, and are challenged to develop a solution. For the _Challenge_ level, they also must design, build, program a robot using LEGO® MINDSTORMS® technology, then compete on a table-top playing field.
 
 * [What is FIRST LEGO® League](http://www.firstlegoleague.org/about)
+* [Core Values](https://www.firstinspires.org/robotics/fll/core-values)
 * [Official FLL Main Page](https://www.firstinspires.org/robotics/fll)
 * [Run a Challenge Team (information about starting a team)](https://firstinmichigan.us/FLL-Challenge/run-a-team/)
 * [Lesson Plans (can be used as practice activities)](https://education.lego.com/en-us/lessons?products=SPIKE%E2%84%A2+Prime+Set&pagesize=12&Subjects=Robotics&grades=Grades+6-8)
@@ -39,6 +40,7 @@ FIRST LEGO® League is an alliance between FIRST & the LEGO® Group. FLL teams r
   * [Team Meeting Guide](https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-tmg-en.pdf)
   * [Challenge Field Wire Frame](https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-wireframe-and-grid.pdf)  
   * [Robot Game Rulebook](https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-rgr-en.pdf)
+  * [Robot Game Score Calculator](https://eventhub.firstinspires.org/scoresheet)
   * [Challenge Updates](https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-challenge-updates.pdf)
   * [Scoring Rubric](https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-rubrics-color.pdf)
   * [Other resources recommended by FIRST](https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-multimedia-resources.pdf)
