@@ -1,0 +1,12 @@
+{
+    "markdownlint.config": {
+        "MD033": false
+    },
+    "cSpell.words": [
+        "CADL",
+        "Disqus",
+        "Hino's",
+        "Mindstorms",
+        "Rulebook"
+    ]
+}
