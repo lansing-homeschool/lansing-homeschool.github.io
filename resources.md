@@ -99,6 +99,13 @@ FIRST LEGO® League is an alliance between FIRST & the LEGO® Group. FLL teams r
 * [Coding for Kids - Learn Python By Playing](https://codingforkids.io/en/play/python/intro-level1)
 * [Hour of Code](https://hourofcode.com/us/learn)
 
+## Robot Designs
+
+* [Prime Lessons - Coop Bot](https://primelessons.org/en/RobotDesigns.html)
+* [FLL Tutorials - Building a competition robot](https://flltutorials.com/translations/en-us/RobotGame/FLLRobot.pdf)
+* [LEGO Education - Building instructions](https://education.lego.com/en-us/product-resources/spike-prime/downloads/building-instructions/)
+* [LEGO Education - Advanced driving base](https://education.lego.com/en-us/lessons/prime-competition-ready/assembling-an-advanced-driving-base/)
+
 ## Print Resources
 
 * [Programming LEGO® EV3 My Blocks: Teaching Concepts and Preparing for FLL® Competition (CADL)](https://opac.cadl.org/search/?searchtype=X&SORT=D&searchscope=15&searcharg=Programming+LEGO+EV3+My+Blocks)
