@@ -24,6 +24,10 @@ We express the *FIRST* philosophies of *Gracious Professionalism* and *Coopertit
 * **Teamwork:** *We are stronger when we work together.*
 * **Fun:** *We enjoy and celebrate what we do!*
 
+## Python Programming
+
+Check out the sample code that we have been working on for the Spike Prime in the [code folder of this repository](https://github.com/lansing-homeschool/lansing-homeschool.github.io/tree/main/code).
+
 ## Recent Posts
 
 {% include posts.html %}
