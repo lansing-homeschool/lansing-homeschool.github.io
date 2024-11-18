@@ -94,6 +94,8 @@ FIRST LEGO® League is an alliance between FIRST & the LEGO® Group. FLL teams r
 
 * [LHH - Creating a Pull Request](https://youtu.be/ZDH0yjuSMhM)
 * [LHH - Python Tutorials](https://github.com/lansing-homeschool/lhh-python-tutorials)
+* [LHH - Python examples](https://github.com/lansing-homeschool/lansing-homeschool.github.io/tree/main/code)
+* [SPIKE Prime Python Docs](https://spike.legoeducation.com/prime/help/lls-help-python#lls-help-python) (requires a Chromium-based browser)
 * [SPIKE Prime Python Knowledge Base](https://tuftsceeo.github.io/SPIKEPythonDocs/SPIKE3.html)
 * [Advanced Python for SPIKE Prime](https://www.antonsmindstorms.com/2021/01/14/advanced-undocumented-python-in-spike-prime-and-mindstorms-hubs/)
 * [Coding for Kids - Learn Python By Playing](https://codingforkids.io/en/play/python/intro-level1)

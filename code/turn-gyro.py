@@ -1,3 +1,4 @@
+# Uses Hub OS 1.6.62 with LEGO Education version 3.4.3
 import runloop
 import motor_pair
 import motor
