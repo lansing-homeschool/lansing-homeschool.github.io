@@ -104,9 +104,11 @@ FIRST LEGO® League is an alliance between FIRST & the LEGO® Group. FLL teams r
 ## Robot Designs
 
 * [Prime Lessons - Coop Bot](https://primelessons.org/en/RobotDesigns.html)
-* [FLL Tutorials - Building a competition robot](https://flltutorials.com/translations/en-us/RobotGame/FLLRobot.pdf)
 * [LEGO Education - Building instructions](https://education.lego.com/en-us/product-resources/spike-prime/downloads/building-instructions/)
 * [LEGO Education - Advanced driving base](https://education.lego.com/en-us/lessons/prime-competition-ready/assembling-an-advanced-driving-base/)
+* [FLL Tutorials - Building a competition robot](https://flltutorials.com/translations/en-us/RobotGame/FLLRobot.pdf)
+* [FLL Tutorials - Example Robots](https://flltutorials.com/en/RobotGame.html)
+* [Wheels](https://flltutorials.com/translations/en-us/RobotGame/Wheels.pdf)
 
 ## Print Resources
 
