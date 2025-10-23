@@ -1,8 +1,21 @@
 <ul>
     {% for file in site.static_files %}
         {% if file.path contains '/code/' and file.extname == '.html' %}
+            {% assign base_name = file.name | remove: '.html' %}
+            {% assign py_file_name = base_name | append: '.py' %}
+            {% assign py_file_path = file.path | remove: file.name | append: base_name %}
+            {% assign py_file_exists = false %}
+            {% for py_file in site.static_files %}
+                {% if py_file.path == py_file_path %}
+                    {% assign py_file_exists = true %}
+                    {% break %}
+                {% endif %}
+            {% endfor %}
             <li>
                 <a href="{{ file.path | relative_url }}">{{ file.name }}</a>
+                {% if py_file_exists %}
+                    (<a href="{{ py_file_path | relative_url }}">download</a>)
+                {% endif %}
             </li>
         {% endif %}
     {% endfor %}
