@@ -10,6 +10,8 @@ navigation:
    url: /resources.html
  - title: Blog
    url: /posts.html
+ - title: Code
+   url: /code.html
 # Disqus Comments
 disqus:
   shortname: lansing-homeschool
