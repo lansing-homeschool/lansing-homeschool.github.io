@@ -1,0 +1,6 @@
+Error: Cannot find module './atelier-dune-light.css'
+    at a (c:\Users\thied\.vscode\extensions\pdconsec.vscode-print-1.4.0\dist\extension.js:2:2572170)
+    at r (c:\Users\thied\.vscode\extensions\pdconsec.vscode-print-1.4.0\dist\extension.js:2:2572119)
+    at T.respond (c:\Users\thied\.vscode\extensions\pdconsec.vscode-print-1.4.0\dist\extension.js:2:3871989)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at Server.<anonymous> (c:\Users\thied\.vscode\extensions\pdconsec.vscode-print-1.4.0\dist\extension.js:2:3856864)

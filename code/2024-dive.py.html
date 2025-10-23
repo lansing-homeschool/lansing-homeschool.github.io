@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)http://localhost:63182/0e1b70c5-5b85-4d6a-88d6-35686a88d9b6/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!--<base href="http://localhost:63182/0e1b70c5-5b85-4d6a-88d6-35686a88d9b6/">--><base href=".">
+  <title>2024-dive.py</title>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  	<link href="./2024-dive.py_files/default.css" rel="stylesheet">
+	<link href="./2024-dive.py_files/line-numbers.css" rel="stylesheet">
+	<link href="./2024-dive.py_files/colour-scheme.css" rel="stylesheet">
+	<link href="./2024-dive.py_files/settings.css" rel="stylesheet">
+  
+  <script type="application/javascript">
+    function printAndClose(enabled) {
+      if (typeof SmiDrawer === "object") {
+        SmiDrawer.apply();
+      }
+      if (enabled) {
+        window.addEventListener("afterprint", (event) => {
+          fetch("completed").then(window.close);
+        });
+        setTimeout(window.print, 500);
+      }
+    }
+    function listenForUpdates() {
+      const ws = new WebSocket(`ws://localhost:${window.location.port}`);
+      ws.onopen = function () {
+        const sessionId = window.location.pathname.split("/")[1];
+        ws.send(JSON.stringify({ sessionId: sessionId }));
+      };
+      ws.onmessage = function (event) {
+        const message = JSON.parse(event.data);
+        if (message.type === 'refreshPreview') {
+          const scrollOffset = window.scrollY;
+          ws.send(JSON.stringify({ type: 'scrollOffset', value: scrollOffset }));
+          location.reload();
+        } else if (message.type === 'restoreScroll') {
+          const setScrollPosition = () => {
+            window.scrollTo(0, message.scrollOffset);
+          };
+          if (document.readyState === 'complete') {
+            setScrollPosition();
+          } else {
+            window.addEventListener('load', setScrollPosition);
+            const images = document.querySelectorAll('img');
+            let loadedImages = 0;
+            images.forEach(img => {
+              if (img.complete) {
+                loadedImages++;
+              } else {
+                img.addEventListener('load', () => {
+                  loadedImages++;
+                  if (loadedImages === images.length) {
+                    setScrollPosition();
+                  }
+                });
+              }
+            });
+          }
+        }
+      };
+
+      document.querySelectorAll('[data-source-map]')
+        .forEach(element => {
+          element.addEventListener('click', () => document.querySelector('.xref-highlight')?.classList.remove('xref-highlight'));
+          element.addEventListener('dblclick', () => {
+            const text = element.getAttribute('data-source-map');
+            ws.send(JSON.stringify({ type: 'findInEditor', value: text }));
+            element.classList.add('xref-highlight');
+          });
+        });
+    };
+  </script>
+</head>
+
+<body onload="listenForUpdates();printAndClose(false);">
+  <h3 class="filepath">code\2024-dive.py</h3>
+  <div>
+    <table class="hljs">
+<tbody><tr><td class="line-number">1</td><td class="line-text"><span class="hljs-string">"""
+</span></td></tr>
+<tr><td class="line-number">2</td><td class="line-text"><span class="hljs-string">This is the code for the 2024 FLL Season Dive/Submerged Challenge.
+</span></td></tr>
+<tr><td class="line-number">3</td><td class="line-text"><span class="hljs-string">Our team uses a single program, but comments out all but one mission at a time in main and
+</span></td></tr>
+<tr><td class="line-number">4</td><td class="line-text"><span class="hljs-string">uploads the code to the hub in a specific slot.
+</span></td></tr>
+<tr><td class="line-number">5</td><td class="line-text"><span class="hljs-string">
+</span></td></tr>
+<tr><td class="line-number">6</td><td class="line-text"><span class="hljs-string">Slot | Function   | Description
+</span></td></tr>
+<tr><td class="line-number">7</td><td class="line-text"><span class="hljs-string">-----|------------|---------------------------------------------------
+</span></td></tr>
+<tr><td class="line-number">8</td><td class="line-text"><span class="hljs-string">1    | whackShark | Hit the shark, hit water sample, flip coral buds, get back home
+</span></td></tr>
+<tr><td class="line-number">9</td><td class="line-text"><span class="hljs-string">2    | moveShark  | Drop shark off, get the octopus, go home on the right side
+</span></td></tr>
+<tr><td class="line-number">10</td><td class="line-text"><span class="hljs-string">3    | moveOcto   | Drop octo off, get plankton sample, move angler fish, go to left home
+</span></td></tr>
+<tr><td class="line-number">11</td><td class="line-text"><span class="hljs-string">4    | liftMast   | Raise the mast of the ship
+</span></td></tr>
+<tr><td class="line-number">12</td><td class="line-text"><span class="hljs-string">5    | moveCoral  | Optional mission. Move a coral that is in home, out of home
+</span></td></tr>
+<tr><td class="line-number">13</td><td class="line-text"><span class="hljs-string">"""</span>
+</td></tr>
+<tr><td class="line-number">14</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">15</td><td class="line-text"><span class="hljs-keyword">import</span> runloop
+</td></tr>
+<tr><td class="line-number">16</td><td class="line-text"><span class="hljs-keyword">import</span> motor_pair
+</td></tr>
+<tr><td class="line-number">17</td><td class="line-text"><span class="hljs-keyword">from</span> hub <span class="hljs-keyword">import</span> port, motion_sensor
+</td></tr>
+<tr><td class="line-number">18</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">19</td><td class="line-text"><span class="hljs-keyword">import</span> motor
+</td></tr>
+<tr><td class="line-number">20</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">21</td><td class="line-text">TURN_BY=<span class="hljs-string">"DEGREES"</span>
+</td></tr>
+<tr><td class="line-number">22</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">23</td><td class="line-text">LEFT=-<span class="hljs-number">100</span>
+</td></tr>
+<tr><td class="line-number">24</td><td class="line-text">RIGHT=<span class="hljs-number">100</span>
+</td></tr>
+<tr><td class="line-number">25</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">26</td><td class="line-text">HOOK_RANGE=<span class="hljs-number">217</span>
+</td></tr>
+<tr><td class="line-number">27</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">28</td><td class="line-text">motor_pair.pair(motor_pair.PAIR_1, port.A, port.E)
+</td></tr>
+<tr><td class="line-number">29</td><td class="line-text">top_motor=port.F
+</td></tr>
+<tr><td class="line-number">30</td><td class="line-text">bottom_motor=port.C
+</td></tr>
+<tr><td class="line-number">31</td><td class="line-text">wheel_circumference_­inches=<span class="hljs-number">6.889764</span> <span class="hljs-comment"># 17.5cm / 2.54cm per inch</span>
+</td></tr>
+<tr><td class="line-number">32</td><td class="line-text">motion_sensor.set_yaw_face(motion_sensor.TOP)
+</td></tr>
+<tr><td class="line-number">33</td><td class="line-text">
+</td></tr>
+<tr style="page-break-before: always; break-before: always;"></tr>
+<tr><td class="line-number">34</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">turn</span>(<span class="hljs-params">degrees, direction, velocity=<span class="hljs-number">200</span>, acceleration=<span class="hljs-number">1000</span></span>):
+</td></tr>
+<tr><td class="line-number">35</td><td class="line-text">    <span class="hljs-string">"""
+</span></td></tr>
+<tr><td class="line-number">36</td><td class="line-text"><span class="hljs-string">    Turns the robot by a the number of degrees using the default method (gyro, rotations)
+</span></td></tr>
+<tr><td class="line-number">37</td><td class="line-text"><span class="hljs-string">    degrees: The value to turn in degrees
+</span></td></tr>
+<tr><td class="line-number">38</td><td class="line-text"><span class="hljs-string">    direction: Either -100 for left or 100 for right (set as the constants LEFT and RIGHT).
+</span></td></tr>
+<tr><td class="line-number">39</td><td class="line-text"><span class="hljs-string">    velocity: between -1050 and 1050. default is 200
+</span></td></tr>
+<tr><td class="line-number">40</td><td class="line-text"><span class="hljs-string">    acceleration: between 0 and 10000. default is 1000. Also used for deceleration
+</span></td></tr>
+<tr><td class="line-number">41</td><td class="line-text"><span class="hljs-string">    """</span>
+</td></tr>
+<tr><td class="line-number">42</td><td class="line-text">    <span class="hljs-keyword">if</span> TURN_BY == <span class="hljs-string">"DEGREES"</span>:
+</td></tr>
+<tr><td class="line-number">43</td><td class="line-text">        <span class="hljs-keyword">await</span> turn_gyro(degrees <span class="hljs-keyword">if</span> direction == RIGHT <span class="hljs-keyword">else</span> -degrees, velocity, acceleration)
+</td></tr>
+<tr><td class="line-number">44</td><td class="line-text">    <span class="hljs-keyword">else</span>:
+</td></tr>
+<tr><td class="line-number">45</td><td class="line-text">        <span class="hljs-keyword">await</span> turn_rotations(degrees, direction, velocity, acceleration)
+</td></tr>
+<tr><td class="line-number">46</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">47</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">turn_rotations</span>(<span class="hljs-params">degrees, direction, velocity=<span class="hljs-number">200</span>, acceleration=<span class="hljs-number">400</span></span>):
+</td></tr>
+<tr><td class="line-number">48</td><td class="line-text">    <span class="hljs-string">"""
+</span></td></tr>
+<tr><td class="line-number">49</td><td class="line-text"><span class="hljs-string">    Turn the robot a certain number of degrees in a certain direction, using a calculation
+</span></td></tr>
+<tr><td class="line-number">50</td><td class="line-text"><span class="hljs-string">    to determine the number of degrees of wheel rotation that would rotate the robot's
+</span></td></tr>
+<tr><td class="line-number">51</td><td class="line-text"><span class="hljs-string">    facing direction that many degrees. Wheel size and wheelbase would change this value.
+</span></td></tr>
+<tr><td class="line-number">52</td><td class="line-text"><span class="hljs-string">    1.8 was the value that the team found by trial and error to be the correct value for the
+</span></td></tr>
+<tr><td class="line-number">53</td><td class="line-text"><span class="hljs-string">    robot they were using.
+</span></td></tr>
+<tr><td class="line-number">54</td><td class="line-text"><span class="hljs-string">    
+</span></td></tr>
+<tr><td class="line-number">55</td><td class="line-text"><span class="hljs-string">    degrees: The value to turn in degrees
+</span></td></tr>
+<tr><td class="line-number">56</td><td class="line-text"><span class="hljs-string">    direction: Either -100 for left or 100 for right (set as the constants LEFT and RIGHT).
+</span></td></tr>
+<tr><td class="line-number">57</td><td class="line-text"><span class="hljs-string">    velocity: between -1050 and 1050. default is 200
+</span></td></tr>
+<tr><td class="line-number">58</td><td class="line-text"><span class="hljs-string">    acceleration: between 0 and 10000. default is 1000. Also used for deceleration
+</span></td></tr>
+<tr><td class="line-number">59</td><td class="line-text"><span class="hljs-string">    """</span>
+</td></tr>
+<tr><td class="line-number">60</td><td class="line-text">    <span class="hljs-comment"># convert the degrees of desired turn to the number of degrees the motors need to turn</span>
+</td></tr>
+<tr><td class="line-number">61</td><td class="line-text">    <span class="hljs-keyword">await</span> motor_pair.move_for_degrees(
+</td></tr>
+<tr><td class="line-number">62</td><td class="line-text">        motor_pair.PAIR_1, 
+</td></tr>
+<tr><td class="line-number">63</td><td class="line-text">        <span class="hljs-built_in">int</span>(degrees * <span class="hljs-number">1.8</span>), 
+</td></tr>
+<tr><td class="line-number">64</td><td class="line-text">        direction, 
+</td></tr>
+<tr><td class="line-number">65</td><td class="line-text">        velocity=velocity, 
+</td></tr>
+<tr><td class="line-number">66</td><td class="line-text">        acceleration=acceleration, 
+</td></tr>
+<tr><td class="line-number">67</td><td class="line-text">        deceleration=acceleration
+</td></tr>
+<tr><td class="line-number">68</td><td class="line-text">    )
+</td></tr>
+<tr><td class="line-number">69</td><td class="line-text">    <span class="hljs-keyword">return</span>
+</td></tr>
+<tr><td class="line-number">70</td><td class="line-text">
+</td></tr>
+<tr style="page-break-before: always; break-before: always;"></tr>
+<tr><td class="line-number">71</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">turn_gyro</span>(<span class="hljs-params">angle, velocity=<span class="hljs-number">100</span>, acceleration=<span class="hljs-number">1000</span></span>):
+</td></tr>
+<tr><td class="line-number">72</td><td class="line-text">    <span class="hljs-string">"""
+</span></td></tr>
+<tr><td class="line-number">73</td><td class="line-text"><span class="hljs-string">    Turn the robot a certain number of degrees in a certain direction, using yaw value
+</span></td></tr>
+<tr><td class="line-number">74</td><td class="line-text"><span class="hljs-string">    from the motion sensor. This should be accurate and not require any adjustments
+</span></td></tr>
+<tr><td class="line-number">75</td><td class="line-text"><span class="hljs-string">    for wheel size or surface, but in practice we have noticed anomalies, and in fact we
+</span></td></tr>
+<tr><td class="line-number">76</td><td class="line-text"><span class="hljs-string">    occasionally needed to restart the hub to get it to work at all.
+</span></td></tr>
+<tr><td class="line-number">77</td><td class="line-text"><span class="hljs-string">    angle: The number of degrees to turn. Positive is right, negative is left.
+</span></td></tr>
+<tr><td class="line-number">78</td><td class="line-text"><span class="hljs-string">    velocity: between -1050 and 1050. default is 100
+</span></td></tr>
+<tr><td class="line-number">79</td><td class="line-text"><span class="hljs-string">    acceleration: between 0 and 10000. default is 1000
+</span></td></tr>
+<tr><td class="line-number">80</td><td class="line-text"><span class="hljs-string">    """</span>
+</td></tr>
+<tr><td class="line-number">81</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">82</td><td class="line-text">    <span class="hljs-comment"># try to wait for the robot to be stable with the current direction set to 0</span>
+</td></tr>
+<tr><td class="line-number">83</td><td class="line-text">    motion_sensor.reset_yaw(<span class="hljs-number">0</span>)
+</td></tr>
+<tr><td class="line-number">84</td><td class="line-text">    <span class="hljs-keyword">await</span> runloop.until(motion_sensor.stable)
+</td></tr>
+<tr><td class="line-number">85</td><td class="line-text">    <span class="hljs-keyword">await</span> runloop.sleep_ms(<span class="hljs-number">200</span>)
+</td></tr>
+<tr><td class="line-number">86</td><td class="line-text">    <span class="hljs-keyword">await</span> runloop.until(motion_sensor.stable)
+</td></tr>
+<tr><td class="line-number">87</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">88</td><td class="line-text">    <span class="hljs-comment"># set steering for either a left or right turn based on positive or negative angle</span>
+</td></tr>
+<tr><td class="line-number">89</td><td class="line-text">    steering = <span class="hljs-number">100</span> <span class="hljs-keyword">if</span> angle &gt;= <span class="hljs-number">0</span> <span class="hljs-keyword">else</span> -<span class="hljs-number">100</span>
+</td></tr>
+<tr><td class="line-number">90</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">91</td><td class="line-text">    <span class="hljs-comment"># start turning</span>
+</td></tr>
+<tr><td class="line-number">92</td><td class="line-text">    motor_pair.move(
+</td></tr>
+<tr><td class="line-number">93</td><td class="line-text">        motor_pair.PAIR_1, 
+</td></tr>
+<tr><td class="line-number">94</td><td class="line-text">        steering, 
+</td></tr>
+<tr><td class="line-number">95</td><td class="line-text">        velocity=velocity, 
+</td></tr>
+<tr><td class="line-number">96</td><td class="line-text">        acceleration=acceleration
+</td></tr>
+<tr><td class="line-number">97</td><td class="line-text">    )
+</td></tr>
+<tr><td class="line-number">98</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">99</td><td class="line-text">    <span class="hljs-keyword">def</span> <span class="hljs-title function_">done</span>():
+</td></tr>
+<tr><td class="line-number">100</td><td class="line-text">        <span class="hljs-comment"># get yaw in decidegrees (tenths of a degree), flip sign, and convert to degrees</span>
+</td></tr>
+<tr><td class="line-number">101</td><td class="line-text">        yaw_deg = motion_sensor.tilt_angles()[<span class="hljs-number">0</span>] * -<span class="hljs-number">0.1</span>
+</td></tr>
+<tr><td class="line-number">102</td><td class="line-text">        <span class="hljs-comment"># return false until the robot has turned the desired angle</span>
+</td></tr>
+<tr><td class="line-number">103</td><td class="line-text">        <span class="hljs-keyword">return</span> <span class="hljs-built_in">abs</span>(yaw_deg) &gt;= <span class="hljs-built_in">abs</span>(angle)
+</td></tr>
+<tr><td class="line-number">104</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">105</td><td class="line-text">    <span class="hljs-comment"># sleep until the robot has turned the desired angle and then stop the drive motors</span>
+</td></tr>
+<tr><td class="line-number">106</td><td class="line-text">    <span class="hljs-keyword">await</span> runloop.until(done)
+</td></tr>
+<tr><td class="line-number">107</td><td class="line-text">    motor_pair.stop(motor_pair.PAIR_1)
+</td></tr>
+<tr><td class="line-number">108</td><td class="line-text">
+</td></tr>
+<tr style="page-break-before: always; break-before: always;"></tr>
+<tr><td class="line-number">109</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">drive</span>(<span class="hljs-params">distance_in_inches, steering=<span class="hljs-number">0</span>, velocity=<span class="hljs-number">700</span>, acceleration=<span class="hljs-number">500</span></span>):
+</td></tr>
+<tr><td class="line-number">110</td><td class="line-text">    <span class="hljs-string">"""
+</span></td></tr>
+<tr><td class="line-number">111</td><td class="line-text"><span class="hljs-string">    distance_in_inches: The value to drive in inches
+</span></td></tr>
+<tr><td class="line-number">112</td><td class="line-text"><span class="hljs-string">    steering: between -100 for left and 100 for right. default is 0 for straight
+</span></td></tr>
+<tr><td class="line-number">113</td><td class="line-text"><span class="hljs-string">    velocity: between -1050 and 1050. default is 500
+</span></td></tr>
+<tr><td class="line-number">114</td><td class="line-text"><span class="hljs-string">    acceleration: between 0 and 10000. default is 500
+</span></td></tr>
+<tr><td class="line-number">115</td><td class="line-text"><span class="hljs-string">    deceleration: between 0 and 10000. default is 500
+</span></td></tr>
+<tr><td class="line-number">116</td><td class="line-text"><span class="hljs-string">    """</span>
+</td></tr>
+<tr><td class="line-number">117</td><td class="line-text">    degrees = <span class="hljs-built_in">int</span>((distance_in_inches/wheel_circumference_­inches)*<span class="hljs-number">360</span>)
+</td></tr>
+<tr><td class="line-number">118</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">119</td><td class="line-text">    <span class="hljs-keyword">await</span> motor_pair.move_for_degrees(
+</td></tr>
+<tr><td class="line-number">120</td><td class="line-text">        motor_pair.PAIR_1, 
+</td></tr>
+<tr><td class="line-number">121</td><td class="line-text">        degrees, 
+</td></tr>
+<tr><td class="line-number">122</td><td class="line-text">        steering, 
+</td></tr>
+<tr><td class="line-number">123</td><td class="line-text">        velocity=velocity, 
+</td></tr>
+<tr><td class="line-number">124</td><td class="line-text">        acceleration=acceleration, 
+</td></tr>
+<tr><td class="line-number">125</td><td class="line-text">        deceleration=acceleration, 
+</td></tr>
+<tr><td class="line-number">126</td><td class="line-text">        stop=motor.SMART_BRAKE
+</td></tr>
+<tr><td class="line-number">127</td><td class="line-text">    )
+</td></tr>
+<tr><td class="line-number">128</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">129</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">liftArm</span>(<span class="hljs-params">degrees=<span class="hljs-number">180</span></span>):
+</td></tr>
+<tr><td class="line-number">130</td><td class="line-text">    <span class="hljs-string">"""
+</span></td></tr>
+<tr><td class="line-number">131</td><td class="line-text"><span class="hljs-string">    Lift the arm (with the extra bricks for weight) of the robot.
+</span></td></tr>
+<tr><td class="line-number">132</td><td class="line-text"><span class="hljs-string">    degrees: The number of degrees to lift the arm. Default is 180, but can be changed.
+</span></td></tr>
+<tr><td class="line-number">133</td><td class="line-text"><span class="hljs-string">    """</span>
+</td></tr>
+<tr><td class="line-number">134</td><td class="line-text">    <span class="hljs-keyword">await</span> motor.run_for_degrees(bottom_motor, degrees, <span class="hljs-number">500</span>)
+</td></tr>
+<tr><td class="line-number">135</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">136</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">dropArm</span>(<span class="hljs-params">degrees=<span class="hljs-number">180</span></span>):
+</td></tr>
+<tr><td class="line-number">137</td><td class="line-text">    <span class="hljs-string">"""
+</span></td></tr>
+<tr><td class="line-number">138</td><td class="line-text"><span class="hljs-string">    Drop the arm (with the extra bricks for weight) of the robot.
+</span></td></tr>
+<tr><td class="line-number">139</td><td class="line-text"><span class="hljs-string">    degrees: The number of degrees to drop the arm. Default is 180, but can be changed.
+</span></td></tr>
+<tr><td class="line-number">140</td><td class="line-text"><span class="hljs-string">    """</span>
+</td></tr>
+<tr><td class="line-number">141</td><td class="line-text">    <span class="hljs-keyword">await</span> motor.run_for_degrees(bottom_motor, -degrees, <span class="hljs-number">1110</span>, acceleration=<span class="hljs-number">10000</span>)
+</td></tr>
+<tr><td class="line-number">142</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">143</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">lifthook</span>(<span class="hljs-params">degrees=HOOK_RANGE, velocity=<span class="hljs-number">500</span></span>):
+</td></tr>
+<tr><td class="line-number">144</td><td class="line-text">    <span class="hljs-string">"""
+</span></td></tr>
+<tr><td class="line-number">145</td><td class="line-text"><span class="hljs-string">    Lift the hook (attachment with single curved "hook" pointing down) of the robot.
+</span></td></tr>
+<tr><td class="line-number">146</td><td class="line-text"><span class="hljs-string">    degrees: The number of degrees to lift the hook. Default is 217, but can be changed.
+</span></td></tr>
+<tr><td class="line-number">147</td><td class="line-text"><span class="hljs-string">    velocity: between -1050 and 1050. default is 500. How fast to lift the hook.
+</span></td></tr>
+<tr><td class="line-number">148</td><td class="line-text"><span class="hljs-string">    """</span>
+</td></tr>
+<tr><td class="line-number">149</td><td class="line-text">    <span class="hljs-keyword">await</span> motor.run_for_degrees(bottom_motor, -degrees, velocity)
+</td></tr>
+<tr><td class="line-number">150</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">151</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">drophook</span>(<span class="hljs-params">degrees=HOOK_RANGE, velocity=<span class="hljs-number">1000</span>, acceleration=<span class="hljs-number">1000</span></span>):
+</td></tr>
+<tr><td class="line-number">152</td><td class="line-text">    <span class="hljs-string">"""
+</span></td></tr>
+<tr><td class="line-number">153</td><td class="line-text"><span class="hljs-string">    Drop the hook (attachment with single curved "hook" pointing down) of the robot.
+</span></td></tr>
+<tr><td class="line-number">154</td><td class="line-text"><span class="hljs-string">    degrees: The number of degrees to drop the hook. Default is 217, but can be changed.
+</span></td></tr>
+<tr><td class="line-number">155</td><td class="line-text"><span class="hljs-string">    velocity: between -1050 and 1050. default is 500. How fast to drop the hook.
+</span></td></tr>
+<tr><td class="line-number">156</td><td class="line-text"><span class="hljs-string">    """</span>
+</td></tr>
+<tr><td class="line-number">157</td><td class="line-text">    <span class="hljs-keyword">await</span> motor.run_for_degrees(bottom_motor, degrees, velocity, acceleration=acceleration)
+</td></tr>
+<tr><td class="line-number">158</td><td class="line-text">
+</td></tr>
+<tr style="page-break-before: always; break-before: always;"></tr>
+<tr><td class="line-number">159</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">whackShark</span>():
+</td></tr>
+<tr><td class="line-number">160</td><td class="line-text">    <span class="hljs-string">"""
+</span></td></tr>
+<tr><td class="line-number">161</td><td class="line-text"><span class="hljs-string">    Whack the shark, back up into the water sample, flip the coral buds, then get back home
+</span></td></tr>
+<tr><td class="line-number">162</td><td class="line-text"><span class="hljs-string">    Line up to cover the d in education with the right side of the robot
+</span></td></tr>
+<tr><td class="line-number">163</td><td class="line-text"><span class="hljs-string">    """</span>
+</td></tr>
+<tr><td class="line-number">164</td><td class="line-text">    straight_distance = <span class="hljs-number">30</span>
+</td></tr>
+<tr><td class="line-number">165</td><td class="line-text">    last_distance = <span class="hljs-number">2.6</span>
+</td></tr>
+<tr><td class="line-number">166</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">167</td><td class="line-text">    <span class="hljs-comment"># move to the shark</span>
+</td></tr>
+<tr><td class="line-number">168</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(straight_distance)
+</td></tr>
+<tr><td class="line-number">169</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">40</span>,LEFT)
+</td></tr>
+<tr><td class="line-number">170</td><td class="line-text">    <span class="hljs-keyword">await</span> liftArm()
+</td></tr>
+<tr><td class="line-number">171</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(last_distance)
+</td></tr>
+<tr><td class="line-number">172</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">173</td><td class="line-text">    <span class="hljs-comment"># hit the shark</span>
+</td></tr>
+<tr><td class="line-number">174</td><td class="line-text">    <span class="hljs-keyword">await</span> dropArm()
+</td></tr>
+<tr><td class="line-number">175</td><td class="line-text">    <span class="hljs-keyword">await</span> runloop.sleep_ms(<span class="hljs-number">500</span>)
+</td></tr>
+<tr><td class="line-number">176</td><td class="line-text">    <span class="hljs-keyword">await</span> liftArm()
+</td></tr>
+<tr><td class="line-number">177</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">178</td><td class="line-text">    <span class="hljs-comment"># back up</span>
+</td></tr>
+<tr><td class="line-number">179</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">3</span>)
+</td></tr>
+<tr><td class="line-number">180</td><td class="line-text">    <span class="hljs-keyword">await</span> dropArm()
+</td></tr>
+<tr><td class="line-number">181</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">9.5</span>, <span class="hljs-number">17</span>)
+</td></tr>
+<tr><td class="line-number">182</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">5.2</span>)
+</td></tr>
+<tr><td class="line-number">183</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">2.2</span>)
+</td></tr>
+<tr><td class="line-number">184</td><td class="line-text">    <span class="hljs-keyword">await</span> turn_rotations(<span class="hljs-number">45</span>, LEFT)
+</td></tr>
+<tr><td class="line-number">185</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">25</span>, -<span class="hljs-number">10</span>, <span class="hljs-number">700</span>)
+</td></tr>
+<tr><td class="line-number">186</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">187</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">moveShark</span>():
+</td></tr>
+<tr><td class="line-number">188</td><td class="line-text">    <span class="hljs-string">"""
+</span></td></tr>
+<tr><td class="line-number">189</td><td class="line-text"><span class="hljs-string">    Drop the shark off in the habitat, then get the octopus and go to the right side home
+</span></td></tr>
+<tr><td class="line-number">190</td><td class="line-text"><span class="hljs-string">    Line up backward, facing the other side of the board. left edge aligned with the boxes.
+</span></td></tr>
+<tr><td class="line-number">191</td><td class="line-text"><span class="hljs-string">    Roll robot backwards to preset wheels. Attach pusher attachment and put the octo slide
+</span></td></tr>
+<tr><td class="line-number">192</td><td class="line-text"><span class="hljs-string">    on the top of the robot
+</span></td></tr>
+<tr><td class="line-number">193</td><td class="line-text"><span class="hljs-string">    """</span>
+</td></tr>
+<tr><td class="line-number">194</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">195</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">31</span>,<span class="hljs-number">4</span>)
+</td></tr>
+<tr><td class="line-number">196</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">10</span>,<span class="hljs-number">5</span>)
+</td></tr>
+<tr><td class="line-number">197</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">50</span>,-<span class="hljs-number">3</span>)
+</td></tr>
+<tr><td class="line-number">198</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">17</span>,<span class="hljs-number">5</span>)
+</td></tr>
+<tr><td class="line-number">199</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">17</span>,<span class="hljs-number">0</span>)
+</td></tr>
+<tr><td class="line-number">200</td><td class="line-text">
+</td></tr>
+<tr style="page-break-before: always; break-before: always;"></tr>
+<tr><td class="line-number">201</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">moveOcto</span>():
+</td></tr>
+<tr><td class="line-number">202</td><td class="line-text">    <span class="hljs-string">"""
+</span></td></tr>
+<tr><td class="line-number">203</td><td class="line-text"><span class="hljs-string">    Move the octopus to the drop off, then get the plankton sample, head to the angler fish,
+</span></td></tr>
+<tr><td class="line-number">204</td><td class="line-text"><span class="hljs-string">    and get back home on the left side of the board
+</span></td></tr>
+<tr><td class="line-number">205</td><td class="line-text"><span class="hljs-string">    Line up left side to 1st major line from the left
+</span></td></tr>
+<tr><td class="line-number">206</td><td class="line-text"><span class="hljs-string">    """</span>
+</td></tr>
+<tr><td class="line-number">207</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">208</td><td class="line-text">    <span class="hljs-comment"># Get to the drop off</span>
+</td></tr>
+<tr><td class="line-number">209</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">19.5</span>)
+</td></tr>
+<tr><td class="line-number">210</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">17</span>,<span class="hljs-number">20</span>)
+</td></tr>
+<tr><td class="line-number">211</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">9</span>,<span class="hljs-number">0</span>)
+</td></tr>
+<tr><td class="line-number">212</td><td class="line-text">    
+</td></tr>
+<tr><td class="line-number">213</td><td class="line-text">    <span class="hljs-comment"># back up to the plankton sample and grab it</span>
+</td></tr>
+<tr><td class="line-number">214</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">20</span>,<span class="hljs-number">1</span>)
+</td></tr>
+<tr><td class="line-number">215</td><td class="line-text">    <span class="hljs-keyword">await</span> drophook()
+</td></tr>
+<tr><td class="line-number">216</td><td class="line-text">    
+</td></tr>
+<tr><td class="line-number">217</td><td class="line-text">    <span class="hljs-comment"># pull away to remove the plankton sample</span>
+</td></tr>
+<tr><td class="line-number">218</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">19</span>,-<span class="hljs-number">5</span>)
+</td></tr>
+<tr><td class="line-number">219</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">10</span>,<span class="hljs-number">4</span>)
+</td></tr>
+<tr><td class="line-number">220</td><td class="line-text">    
+</td></tr>
+<tr><td class="line-number">221</td><td class="line-text">    <span class="hljs-comment"># lift the hook and turn to the left</span>
+</td></tr>
+<tr><td class="line-number">222</td><td class="line-text">    <span class="hljs-keyword">await</span> lifthook()
+</td></tr>
+<tr><td class="line-number">223</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">3.5</span>,<span class="hljs-number">10</span>)
+</td></tr>
+<tr><td class="line-number">224</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">73</span>,LEFT)
+</td></tr>
+<tr><td class="line-number">225</td><td class="line-text">    
+</td></tr>
+<tr><td class="line-number">226</td><td class="line-text">    <span class="hljs-comment"># drive to the angler fish and turn into the lever</span>
+</td></tr>
+<tr><td class="line-number">227</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">5</span>)
+</td></tr>
+<tr><td class="line-number">228</td><td class="line-text">    <span class="hljs-keyword">await</span> turn_rotations(<span class="hljs-number">100</span>,RIGHT)
+</td></tr>
+<tr><td class="line-number">229</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">230</td><td class="line-text">    <span class="hljs-comment"># get back home</span>
+</td></tr>
+<tr><td class="line-number">231</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">25</span>,<span class="hljs-number">11</span>)
+</td></tr>
+<tr><td class="line-number">232</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">28</span>)
+</td></tr>
+<tr><td class="line-number">233</td><td class="line-text">
+</td></tr>
+<tr style="page-break-before: always; break-before: always;"></tr>
+<tr><td class="line-number">234</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">liftMast</span>():
+</td></tr>
+<tr><td class="line-number">235</td><td class="line-text">    <span class="hljs-string">"""
+</span></td></tr>
+<tr><td class="line-number">236</td><td class="line-text"><span class="hljs-string">    Raise the mast of the ship. Flips it all the way up, then pulls it back down
+</span></td></tr>
+<tr><td class="line-number">237</td><td class="line-text"><span class="hljs-string">    Line up left side to 2nd major line from the left, facing "north"
+</span></td></tr>
+<tr><td class="line-number">238</td><td class="line-text"><span class="hljs-string">    """</span>
+</td></tr>
+<tr><td class="line-number">239</td><td class="line-text">    <span class="hljs-keyword">await</span> drophook()
+</td></tr>
+<tr><td class="line-number">240</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">20.5</span>)
+</td></tr>
+<tr><td class="line-number">241</td><td class="line-text">    <span class="hljs-keyword">await</span> turn_rotations(<span class="hljs-number">90</span>,RIGHT)
+</td></tr>
+<tr><td class="line-number">242</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">7.8</span>)
+</td></tr>
+<tr><td class="line-number">243</td><td class="line-text">    <span class="hljs-keyword">await</span> lifthook(<span class="hljs-number">217</span>,<span class="hljs-number">102</span>)
+</td></tr>
+<tr><td class="line-number">244</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">4.1</span>)
+</td></tr>
+<tr><td class="line-number">245</td><td class="line-text">    <span class="hljs-keyword">await</span> drophook(<span class="hljs-number">70</span>)
+</td></tr>
+<tr><td class="line-number">246</td><td class="line-text">    
+</td></tr>
+<tr><td class="line-number">247</td><td class="line-text">    <span class="hljs-comment"># drive while dropping the hook at the same time</span>
+</td></tr>
+<tr><td class="line-number">248</td><td class="line-text">    runloop.run(drive(-<span class="hljs-number">3</span>), drophook(<span class="hljs-number">70</span>, velocity=<span class="hljs-number">100</span>))
+</td></tr>
+<tr><td class="line-number">249</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">250</td><td class="line-text">    <span class="hljs-comment"># go back home</span>
+</td></tr>
+<tr><td class="line-number">251</td><td class="line-text">    <span class="hljs-keyword">await</span> lifthook(<span class="hljs-number">140</span>)
+</td></tr>
+<tr><td class="line-number">252</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">7.8</span>)
+</td></tr>
+<tr><td class="line-number">253</td><td class="line-text">    <span class="hljs-keyword">await</span> turn_rotations(<span class="hljs-number">90</span>,RIGHT)
+</td></tr>
+<tr><td class="line-number">254</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">12</span>)
+</td></tr>
+<tr><td class="line-number">255</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">256</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">moveCoral</span>():
+</td></tr>
+<tr><td class="line-number">257</td><td class="line-text">    <span class="hljs-string">"""
+</span></td></tr>
+<tr><td class="line-number">258</td><td class="line-text"><span class="hljs-string">    Optional mission. Move a coral that is in home, out of home
+</span></td></tr>
+<tr><td class="line-number">259</td><td class="line-text"><span class="hljs-string">    Line up close to the edge of home
+</span></td></tr>
+<tr><td class="line-number">260</td><td class="line-text"><span class="hljs-string">    """</span>
+</td></tr>
+<tr><td class="line-number">261</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">262</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">16</span>,<span class="hljs-number">0</span>,<span class="hljs-number">500</span>)
+</td></tr>
+<tr><td class="line-number">263</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">18</span>,<span class="hljs-number">0</span>)
+</td></tr>
+<tr><td class="line-number">264</td><td class="line-text">
+</td></tr>
+<tr style="page-break-before: always; break-before: always;"></tr>
+<tr><td class="line-number">265</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
+</td></tr>
+<tr><td class="line-number">266</td><td class="line-text">    <span class="hljs-comment"># loaded as #1 - line up to the back, right the right side over the d in education</span>
+</td></tr>
+<tr><td class="line-number">267</td><td class="line-text">    <span class="hljs-comment">#                uses the the flipper attachment</span>
+</td></tr>
+<tr><td class="line-number">268</td><td class="line-text">    <span class="hljs-keyword">await</span> whackShark()
+</td></tr>
+<tr><td class="line-number">269</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">270</td><td class="line-text">    <span class="hljs-comment"># loaded as #2 - line up in reverse facing the other side of the board.</span>
+</td></tr>
+<tr><td class="line-number">271</td><td class="line-text">    <span class="hljs-comment">#                left side side aligned with the boxes (over the logo).</span>
+</td></tr>
+<tr><td class="line-number">272</td><td class="line-text">    <span class="hljs-comment">#                Roll robot backwards to preset wheels. Attach pusher attachment</span>
+</td></tr>
+<tr><td class="line-number">273</td><td class="line-text">    <span class="hljs-keyword">await</span> moveShark()
+</td></tr>
+<tr><td class="line-number">274</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">275</td><td class="line-text">    <span class="hljs-comment"># loaded as #3 - line up left side to 1st major line from the left</span>
+</td></tr>
+<tr><td class="line-number">276</td><td class="line-text">    <span class="hljs-keyword">await</span> moveOcto()
+</td></tr>
+<tr><td class="line-number">277</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">278</td><td class="line-text">    <span class="hljs-comment"># loaded as #4 - line up left side to 2nd major line from the left</span>
+</td></tr>
+<tr><td class="line-number">279</td><td class="line-text">    <span class="hljs-keyword">await</span> liftMast()
+</td></tr>
+<tr><td class="line-number">280</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">281</td><td class="line-text">    <span class="hljs-comment"># loaded as #5 - line up close to the edge</span>
+</td></tr>
+<tr><td class="line-number">282</td><td class="line-text">    <span class="hljs-keyword">await</span> moveCoral()
+</td></tr>
+<tr><td class="line-number">283</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">284</td><td class="line-text">    <span class="hljs-keyword">raise</span> SystemExit
+</td></tr>
+<tr><td class="line-number">285</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">286</td><td class="line-text">runloop.run(main())</td></tr>
+</tbody></table>
+  </div>
+
+
+</body></html>
