@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)http://localhost:65327/eea29366-43f1-49d7-b384-a603ea75bc17/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!--<base href="http://localhost:65327/eea29366-43f1-49d7-b384-a603ea75bc17/">--><base href=".">
+  <title>2025-unearthed.py</title>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  	<link href="./2025-unearthed.py_files/default.css" rel="stylesheet">
+	<link href="./2025-unearthed.py_files/line-numbers.css" rel="stylesheet">
+	<link href="./2025-unearthed.py_files/settings.css" rel="stylesheet">
+  
+<style>
+    body {
+        margin: 0;
+        font-family: 'Georgia', serif;
+        background: radial-gradient(circle at 50% 50%, #fdf6e3 0%, #f4e1b0 100%);
+        color: #4b3b2a;
+        padding: 2rem;
+    }
+</style>
+  <script type="application/javascript">
+    function printAndClose(enabled) {
+      if (typeof SmiDrawer === "function") {
+        const svgs = document.querySelectorAll('svg[data-smiles]');
+        svgs.forEach(function(svg) {
+          var smiles = svg.getAttribute('data-smiles');
+          const configJson = svg.getAttribute('data-smiles-config');
+          let moleculeOptions;
+          let reactionOptions;
+          if (configJson) {
+            try {
+              // decodeURIComponent to match encodeURIComponent in processMarkdown.ts
+              var parsedConfig = JSON.parse(decodeURIComponent(configJson));
+              moleculeOptions = parsedConfig.moleculeOptions ?? {};
+              reactionOptions = parsedConfig.reactionOptions ?? {};
+            } catch (e) {
+              // ignore, fallback to empty options
+            }
+          }
+          var parent = svg.parentNode;
+          var errorDiv = document.createElement('div');
+          errorDiv.style.color = 'red';
+          errorDiv.style.fontFamily = 'monospace';
+          errorDiv.style.background = '#fff0f0';
+          errorDiv.style.border = '1px solid #f88';
+          errorDiv.style.padding = '0.5em 1em';
+          errorDiv.style.margin = '0.5em 0';
+          function showError(msg) {
+            if (parent) {
+              var pre = document.createElement('pre');
+              pre.textContent = msg;
+              errorDiv.appendChild(pre);
+              parent.replaceChild(errorDiv, svg);
+            }
+          }
+          try {
+            var drawer = new SmiDrawer(moleculeOptions, reactionOptions);
+            SmilesDrawer.parse(smiles, function(tree) {
+              drawer.draw(smiles, svg);
+            }, function(err) {
+              showError('Invalid SMILES: ' + smiles + (err ? '\n' + err : ''));
+            });
+          } catch (err) {
+            showError('Invalid SMILES: ' + smiles + (err ? '\n' + err : ''));
+          }
+        });
+      }
+      if (enabled) {
+        window.addEventListener("afterprint", (event) => {
+          fetch("completed").then(window.close);
+        });
+        setTimeout(window.print, 500);
+      }
+    }
+    function listenForUpdates() {
+      const ws = new WebSocket(`ws://localhost:${window.location.port}`);
+      ws.onopen = function () {
+        const sessionId = window.location.pathname.split("/")[1];
+        ws.send(JSON.stringify({ sessionId: sessionId }));
+      };
+      ws.onmessage = function (event) {
+        const message = JSON.parse(event.data);
+        if (message.type === 'refreshPreview') {
+          const scrollOffset = window.scrollY;
+          ws.send(JSON.stringify({ type: 'scrollOffset', value: scrollOffset }));
+          location.reload();
+        } else if (message.type === 'restoreScroll') {
+          const setScrollPosition = () => {
+            window.scrollTo(0, message.scrollOffset);
+          };
+          if (document.readyState === 'complete') {
+            setScrollPosition();
+          } else {
+            window.addEventListener('load', setScrollPosition);
+            const images = document.querySelectorAll('img');
+            let loadedImages = 0;
+            images.forEach(img => {
+              if (img.complete) {
+                loadedImages++;
+              } else {
+                img.addEventListener('load', () => {
+                  loadedImages++;
+                  if (loadedImages === images.length) {
+                    setScrollPosition();
+                  }
+                });
+              }
+            });
+          }
+        }
+      };
+
+      document.querySelectorAll('[data-source-map]')
+        .forEach(element => {
+          element.addEventListener('click', () => document.querySelector('.xref-highlight')?.classList.remove('xref-highlight'));
+          element.addEventListener('dblclick', () => {
+            const text = element.getAttribute('data-source-map');
+            ws.send(JSON.stringify({ type: 'findInEditor', value: text }));
+            element.classList.add('xref-highlight');
+          });
+        });
+    };
+  </script>
+  	<link href="./parchment.css" rel="stylesheet">
+</head>
+
+<body onload="listenForUpdates();printAndClose(false);">
+  <h3 class="filepath, inkTitle">code/2025-unearthed.py</h3>
+  <div>
+    <table class="hljs">
+<tbody><tr><td class="line-number">1</td><td class="line-text"><span class="hljs-keyword">import</span> runloop
+</td></tr>
+<tr><td class="line-number">2</td><td class="line-text"><span class="hljs-keyword">import</span> motor_pair
+</td></tr>
+<tr><td class="line-number">3</td><td class="line-text"><span class="hljs-keyword">import</span> motor
+</td></tr>
+<tr><td class="line-number">4</td><td class="line-text"><span class="hljs-keyword">from</span> hub <span class="hljs-keyword">import</span> port, motion_sensor
+</td></tr>
+<tr><td class="line-number">5</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">6</td><td class="line-text">LEFT=-<span class="hljs-number">100</span>
+</td></tr>
+<tr><td class="line-number">7</td><td class="line-text">RIGHT=<span class="hljs-number">100</span>
+</td></tr>
+<tr><td class="line-number">8</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">9</td><td class="line-text">HOOK_RANGE=<span class="hljs-number">223</span>
+</td></tr>
+<tr><td class="line-number">10</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">11</td><td class="line-text">motor_pair.pair(motor_pair.PAIR_1, port.A, port.E)
+</td></tr>
+<tr><td class="line-number">12</td><td class="line-text">top_motor=port.F
+</td></tr>
+<tr><td class="line-number">13</td><td class="line-text">bottom_motor=port.C
+</td></tr>
+<tr><td class="line-number">14</td><td class="line-text">wheel_circumference_­inches=<span class="hljs-number">6.889764</span> <span class="hljs-comment"># 17.5cm / 2.54cm per inch</span>
+</td></tr>
+<tr><td class="line-number">15</td><td class="line-text">motion_sensor.set_yaw_face(motion_sensor.TOP)
+</td></tr>
+<tr><td class="line-number">16</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">17</td><td class="line-text">active_routine=<span class="hljs-number">0</span>
+</td></tr>
+<tr><td class="line-number">18</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">19</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">turn</span>(<span class="hljs-params">degrees, direction, velocity=<span class="hljs-number">200</span>, acceleration=<span class="hljs-number">1000</span></span>):
+</td></tr>
+<tr><td class="line-number">20</td><td class="line-text">    <span class="hljs-keyword">await</span> turn_rotations(degrees, direction, velocity, acceleration)
+</td></tr>
+<tr><td class="line-number">21</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">22</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">turn_rotations</span>(<span class="hljs-params">degrees, direction, velocity=<span class="hljs-number">200</span>, acceleration=<span class="hljs-number">400</span></span>):
+</td></tr>
+<tr><td class="line-number">23</td><td class="line-text">    <span class="hljs-keyword">await</span> motor_pair.move_for_degrees(motor_pair.PAIR_1,
+</td></tr>
+<tr><td class="line-number">24</td><td class="line-text">                                      <span class="hljs-built_in">int</span>(degrees * <span class="hljs-number">1.8</span>),
+</td></tr>
+<tr><td class="line-number">25</td><td class="line-text">                                      direction,
+</td></tr>
+<tr><td class="line-number">26</td><td class="line-text">                                      velocity=velocity,
+</td></tr>
+<tr><td class="line-number">27</td><td class="line-text">                                      acceleration=acceleration,
+</td></tr>
+<tr><td class="line-number">28</td><td class="line-text">                                      deceleration=acceleration)
+</td></tr>
+<tr><td class="line-number">29</td><td class="line-text">    <span class="hljs-keyword">return</span>
+</td></tr>
+<tr><td class="line-number">30</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">31</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">drive</span>(<span class="hljs-params">distance_in_inches, steering=<span class="hljs-number">0</span>, velocity=<span class="hljs-number">700</span>,
+</span></td></tr>
+<tr><td class="line-number">32</td><td class="line-text"><span class="hljs-params">                acceleration=<span class="hljs-number">500</span>, deceleration=<span class="hljs-number">500</span></span>):
+</td></tr>
+<tr><td class="line-number">33</td><td class="line-text">    <span class="hljs-string">"""
+</span></td></tr>
+<tr><td class="line-number">34</td><td class="line-text"><span class="hljs-string">    distance_in_inches: The value to drive in inches
+</span></td></tr>
+<tr><td class="line-number">35</td><td class="line-text"><span class="hljs-string">    steering: between -100 for left and 100 for right. default is 0 for straight
+</span></td></tr>
+<tr><td class="line-number">36</td><td class="line-text"><span class="hljs-string">    velocity: between -1050 and 1050. default is 500
+</span></td></tr>
+<tr><td class="line-number">37</td><td class="line-text"><span class="hljs-string">    acceleration: between 0 and 10000. default is 500
+</span></td></tr>
+<tr><td class="line-number">38</td><td class="line-text"><span class="hljs-string">    deceleration: between 0 and 10000. default is 500
+</span></td></tr>
+<tr><td class="line-number">39</td><td class="line-text"><span class="hljs-string">    """</span>
+</td></tr>
+<tr><td class="line-number">40</td><td class="line-text">    degrees = <span class="hljs-built_in">int</span>((distance_in_inches/wheel_circumference_­inches)*<span class="hljs-number">360</span>)
+</td></tr>
+<tr><td class="line-number">41</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">42</td><td class="line-text">    <span class="hljs-keyword">await</span> motor_pair.move_for_degrees(motor_pair.PAIR_1, degrees, steering,
+</td></tr>
+<tr><td class="line-number">43</td><td class="line-text">                                      velocity=velocity, acceleration=acceleration,
+</td></tr>
+<tr><td class="line-number">44</td><td class="line-text">                                      deceleration=deceleration,
+</td></tr>
+<tr><td class="line-number">45</td><td class="line-text">                                      stop=motor.SMART_BRAKE)
+</td></tr>
+<tr><td class="line-number">46</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">47</td><td class="line-text"><span class="hljs-keyword">def</span> <span class="hljs-title function_">spinWheels</span>(<span class="hljs-params">velocity=<span class="hljs-number">1000</span></span>):
+</td></tr>
+<tr><td class="line-number">48</td><td class="line-text">    motor_pair.move(motor_pair.PAIR_1, <span class="hljs-number">0</span>, velocity=velocity)
+</td></tr>
+<tr><td class="line-number">49</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">50</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">lowerForks</span>(<span class="hljs-params">degrees=-<span class="hljs-number">3360</span></span>):
+</td></tr>
+<tr><td class="line-number">51</td><td class="line-text">    <span class="hljs-keyword">await</span> motor.run_for_degrees(bottom_motor, degrees, <span class="hljs-number">1000</span>)
+</td></tr>
+<tr><td class="line-number">52</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">53</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">liftForks</span>(<span class="hljs-params">degrees=<span class="hljs-number">3360</span></span>):
+</td></tr>
+<tr><td class="line-number">54</td><td class="line-text">    <span class="hljs-keyword">await</span> motor.run_for_degrees(bottom_motor, degrees, <span class="hljs-number">1000</span>)
+</td></tr>
+<tr><td class="line-number">55</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">56</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">lifthook</span>(<span class="hljs-params">degrees=HOOK_RANGE, velocity=<span class="hljs-number">500</span></span>):
+</td></tr>
+<tr><td class="line-number">57</td><td class="line-text">    <span class="hljs-keyword">await</span> motor.run_for_degrees(bottom_motor, -degrees, velocity)
+</td></tr>
+<tr><td class="line-number">58</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">59</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">drophook</span>(<span class="hljs-params">degrees=HOOK_RANGE, velocity=<span class="hljs-number">1000</span>, acceleration=<span class="hljs-number">1000</span></span>):
+</td></tr>
+<tr><td class="line-number">60</td><td class="line-text">    <span class="hljs-keyword">await</span> motor.run_for_degrees(bottom_motor, degrees,
+</td></tr>
+<tr><td class="line-number">61</td><td class="line-text">                                velocity, acceleration=acceleration)
+</td></tr>
+<tr><td class="line-number">62</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">63</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">motorsToZero</span>():
+</td></tr>
+<tr><td class="line-number">64</td><td class="line-text">    runloop.run(
+</td></tr>
+<tr><td class="line-number">65</td><td class="line-text">        motor.run_to_absolute_posi­tion(top_motor, <span class="hljs-number">0</span>, <span class="hljs-number">500</span>),
+</td></tr>
+<tr><td class="line-number">66</td><td class="line-text">        motor.run_to_absolute_posi­tion(bottom_motor, <span class="hljs-number">0</span>, <span class="hljs-number">500</span>)
+</td></tr>
+<tr><td class="line-number">67</td><td class="line-text">    )
+</td></tr>
+<tr><td class="line-number">68</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">69</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">liftArm</span>(<span class="hljs-params">degrees=<span class="hljs-number">180</span></span>):
+</td></tr>
+<tr><td class="line-number">70</td><td class="line-text">    <span class="hljs-keyword">await</span> motor.run_for_degrees(bottom_motor, degrees, <span class="hljs-number">500</span>)
+</td></tr>
+<tr><td class="line-number">71</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">72</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">dropArm</span>(<span class="hljs-params">degrees=<span class="hljs-number">180</span>, velocity=<span class="hljs-number">1110</span></span>):
+</td></tr>
+<tr><td class="line-number">73</td><td class="line-text">    <span class="hljs-keyword">await</span> motor.run_for_degrees(bottom_motor, -degrees, velocity, acceleration=<span class="hljs-number">10000</span>)
+</td></tr>
+<tr><td class="line-number">74</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">75</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">easterIsland</span>():
+</td></tr>
+<tr><td class="line-number">76</td><td class="line-text">    <span class="hljs-keyword">await</span> liftArm()
+</td></tr>
+<tr><td class="line-number">77</td><td class="line-text">    <span class="hljs-keyword">await</span> drive (<span class="hljs-number">17</span>)
+</td></tr>
+<tr><td class="line-number">78</td><td class="line-text">    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>):
+</td></tr>
+<tr><td class="line-number">79</td><td class="line-text">        <span class="hljs-keyword">await</span> dropArm()
+</td></tr>
+<tr><td class="line-number">80</td><td class="line-text">        <span class="hljs-keyword">await</span> liftArm()
+</td></tr>
+<tr><td class="line-number">81</td><td class="line-text">        <span class="hljs-keyword">await</span> runloop.sleep_ms(<span class="hljs-number">500</span>)
+</td></tr>
+<tr><td class="line-number">82</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">17</span>)
+</td></tr>
+<tr><td class="line-number">83</td><td class="line-text"> 
+</td></tr>
+<tr><td class="line-number">84</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">wackTheTable</span>():
+</td></tr>
+<tr><td class="line-number">85</td><td class="line-text">    <span class="hljs-keyword">await</span> liftArm()
+</td></tr>
+<tr><td class="line-number">86</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">1</span>)
+</td></tr>
+<tr><td class="line-number">87</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">14</span>)
+</td></tr>
+<tr><td class="line-number">88</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">17</span>, LEFT)
+</td></tr>
+<tr><td class="line-number">89</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">24.5</span>,-<span class="hljs-number">4</span>,<span class="hljs-number">500</span>)
+</td></tr>
+<tr><td class="line-number">90</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(LEFT,<span class="hljs-number">60</span>)
+</td></tr>
+<tr><td class="line-number">91</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">9.25</span>)
+</td></tr>
+<tr><td class="line-number">92</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">92</span>,LEFT)
+</td></tr>
+<tr><td class="line-number">93</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">2</span>)
+</td></tr>
+<tr><td class="line-number">94</td><td class="line-text">    <span class="hljs-comment"># KicktheBucket</span>
+</td></tr>
+<tr><td class="line-number">95</td><td class="line-text">    <span class="hljs-keyword">await</span> dropArm(degrees=<span class="hljs-number">90</span>,velocity=<span class="hljs-number">500</span>)
+</td></tr>
+<tr><td class="line-number">96</td><td class="line-text">    <span class="hljs-keyword">await</span> liftArm(<span class="hljs-number">90</span>)
+</td></tr>
+<tr><td class="line-number">97</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">75</span>,LEFT)
+</td></tr>
+<tr><td class="line-number">98</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">12.5</span>)
+</td></tr>
+<tr><td class="line-number">99</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">50</span>,RIGHT)
+</td></tr>
+<tr><td class="line-number">100</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">32</span>)
+</td></tr>
+<tr><td class="line-number">101</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">102</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">theOtherSide</span>():
+</td></tr>
+<tr><td class="line-number">103</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">1</span>)
+</td></tr>
+<tr><td class="line-number">104</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">11.2</span>)
+</td></tr>
+<tr><td class="line-number">105</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">90</span>, LEFT)
+</td></tr>
+<tr><td class="line-number">106</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">21.3</span>)
+</td></tr>
+<tr><td class="line-number">107</td><td class="line-text">    <span class="hljs-keyword">await</span> lifthook()
+</td></tr>
+<tr><td class="line-number">108</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">90</span>, RIGHT)
+</td></tr>
+<tr><td class="line-number">109</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">0.3</span>)
+</td></tr>
+<tr><td class="line-number">110</td><td class="line-text">    <span class="hljs-keyword">await</span> drophook()
+</td></tr>
+<tr><td class="line-number">111</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">2.5</span>)
+</td></tr>
+<tr><td class="line-number">112</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">0.2</span>)
+</td></tr>
+<tr><td class="line-number">113</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">110</span>, RIGHT)
+</td></tr>
+<tr><td class="line-number">114</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">35</span>, <span class="hljs-number">7</span>)
+</td></tr>
+<tr><td class="line-number">115</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">20</span>,-<span class="hljs-number">3</span>)
+</td></tr>
+<tr><td class="line-number">116</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">117</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">liftTable</span>():
+</td></tr>
+<tr><td class="line-number">118</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">17</span>)
+</td></tr>
+<tr><td class="line-number">119</td><td class="line-text">    <span class="hljs-keyword">await</span> turn_rotations(<span class="hljs-number">45</span>, LEFT)
+</td></tr>
+<tr><td class="line-number">120</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">12</span>, -<span class="hljs-number">10</span>, <span class="hljs-number">700</span>)
+</td></tr>
+<tr><td class="line-number">121</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">122</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">brushBrushBrush</span>():
+</td></tr>
+<tr><td class="line-number">123</td><td class="line-text">    <span class="hljs-keyword">await</span> liftForks(<span class="hljs-number">765</span>)
+</td></tr>
+<tr><td class="line-number">124</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">1.67</span>)
+</td></tr>
+<tr><td class="line-number">125</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">24</span>)
+</td></tr>
+<tr><td class="line-number">126</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">90</span>,LEFT)
+</td></tr>
+<tr><td class="line-number">127</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">45</span>,LEFT)
+</td></tr>
+<tr><td class="line-number">128</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">90</span>,RIGHT)
+</td></tr>
+<tr><td class="line-number">129</td><td class="line-text">    <span class="hljs-keyword">await</span> liftForks(<span class="hljs-number">900</span>)
+</td></tr>
+<tr><td class="line-number">130</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">2.67</span>)
+</td></tr>
+<tr><td class="line-number">131</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">150</span>,LEFT)
+</td></tr>
+<tr><td class="line-number">132</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">14</span>)
+</td></tr>
+<tr><td class="line-number">133</td><td class="line-text"> 
+</td></tr>
+<tr><td class="line-number">134</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">mineIronOre</span>():
+</td></tr>
+<tr><td class="line-number">135</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">1.67</span>)    
+</td></tr>
+<tr><td class="line-number">136</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">30</span>)
+</td></tr>
+<tr><td class="line-number">137</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">90</span>,RIGHT)
+</td></tr>
+<tr><td class="line-number">138</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">14</span>)
+</td></tr>
+<tr><td class="line-number">139</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">90</span>,LEFT)
+</td></tr>
+<tr><td class="line-number">140</td><td class="line-text">    <span class="hljs-keyword">await</span> lifthook(<span class="hljs-number">160</span>)
+</td></tr>
+<tr><td class="line-number">141</td><td class="line-text">    <span class="hljs-keyword">await</span> runloop.sleep_ms(<span class="hljs-number">3000</span>)
+</td></tr>
+<tr><td class="line-number">142</td><td class="line-text">    <span class="hljs-keyword">await</span> drophook(<span class="hljs-number">130</span>)
+</td></tr>
+<tr><td class="line-number">143</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">90</span>,LEFT)
+</td></tr>
+<tr><td class="line-number">144</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">11</span>)
+</td></tr>
+<tr><td class="line-number">145</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">75</span>,LEFT)
+</td></tr>
+<tr><td class="line-number">146</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">27.5</span>)
+</td></tr>
+<tr><td class="line-number">147</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">148</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">raiseTheSails</span>():
+</td></tr>
+<tr><td class="line-number">149</td><td class="line-text">    <span class="hljs-keyword">await</span> lifthook()
+</td></tr>
+<tr><td class="line-number">150</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">21.2</span>,<span class="hljs-number">2</span>)
+</td></tr>
+<tr><td class="line-number">151</td><td class="line-text">    <span class="hljs-keyword">await</span> drophook()
+</td></tr>
+<tr><td class="line-number">152</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">1.5</span>)
+</td></tr>
+<tr><td class="line-number">153</td><td class="line-text">    <span class="hljs-keyword">await</span> lifthook()
+</td></tr>
+<tr><td class="line-number">154</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">18.5</span>)
+</td></tr>
+<tr><td class="line-number">155</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">156</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">loopHole</span>():
+</td></tr>
+<tr><td class="line-number">157</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">1</span>)
+</td></tr>
+<tr><td class="line-number">158</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">28</span>)
+</td></tr>
+<tr><td class="line-number">159</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">40</span>, LEFT)
+</td></tr>
+<tr><td class="line-number">160</td><td class="line-text">    <span class="hljs-keyword">await</span> liftForks(<span class="hljs-number">500</span>)
+</td></tr>
+<tr><td class="line-number">161</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(<span class="hljs-number">5</span>)
+</td></tr>
+<tr><td class="line-number">162</td><td class="line-text">    <span class="hljs-keyword">await</span> liftForks(<span class="hljs-number">1500</span>)
+</td></tr>
+<tr><td class="line-number">163</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">5</span>)
+</td></tr>
+<tr><td class="line-number">164</td><td class="line-text">    <span class="hljs-keyword">await</span> turn(<span class="hljs-number">40</span>,RIGHT)
+</td></tr>
+<tr><td class="line-number">165</td><td class="line-text">    <span class="hljs-keyword">await</span> drive(-<span class="hljs-number">29</span>)
+</td></tr>
+<tr><td class="line-number">166</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">167</td><td class="line-text"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
+</td></tr>
+<tr><td class="line-number">168</td><td class="line-text">    <span class="hljs-comment"># loaded as #1</span>
+</td></tr>
+<tr><td class="line-number">169</td><td class="line-text">    <span class="hljs-comment"># - line up to the left edge of the left back of the robot</span>
+</td></tr>
+<tr><td class="line-number">170</td><td class="line-text">    <span class="hljs-comment">#   to 2nd major line to the left</span>
+</td></tr>
+<tr><td class="line-number">171</td><td class="line-text">    <span class="hljs-keyword">await</span> easterIsland()
+</td></tr>
+<tr><td class="line-number">172</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">173</td><td class="line-text">    <span class="hljs-comment"># loaded as #2</span>
+</td></tr>
+<tr><td class="line-number">174</td><td class="line-text">    <span class="hljs-comment"># - line up to the back, right the right side at the</span>
+</td></tr>
+<tr><td class="line-number">175</td><td class="line-text">    <span class="hljs-comment">#   second major line from the right</span>
+</td></tr>
+<tr><td class="line-number">176</td><td class="line-text">    <span class="hljs-keyword">await</span> wackTheTable()
+</td></tr>
+<tr><td class="line-number">177</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">178</td><td class="line-text">    <span class="hljs-comment"># loaded as #3</span>
+</td></tr>
+<tr><td class="line-number">179</td><td class="line-text">    <span class="hljs-keyword">await</span> raiseTheSails()
+</td></tr>
+<tr><td class="line-number">180</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">181</td><td class="line-text">    <span class="hljs-comment"># loaded as #4</span>
+</td></tr>
+<tr><td class="line-number">182</td><td class="line-text">    <span class="hljs-keyword">await</span> theOtherSide()
+</td></tr>
+<tr><td class="line-number">183</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">184</td><td class="line-text">    <span class="hljs-comment"># loaded as #5</span>
+</td></tr>
+<tr><td class="line-number">185</td><td class="line-text">    <span class="hljs-keyword">await</span> brushBrushBrush()
+</td></tr>
+<tr><td class="line-number">186</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">187</td><td class="line-text">    <span class="hljs-comment"># loaded as #6</span>
+</td></tr>
+<tr><td class="line-number">188</td><td class="line-text">    <span class="hljs-keyword">await</span> mineIronOre()
+</td></tr>
+<tr><td class="line-number">189</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">190</td><td class="line-text">    <span class="hljs-comment"># loaded as #7</span>
+</td></tr>
+<tr><td class="line-number">191</td><td class="line-text">    <span class="hljs-keyword">await</span> loopHole()
+</td></tr>
+<tr><td class="line-number">192</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">193</td><td class="line-text">    <span class="hljs-keyword">raise</span> SystemExit
+</td></tr>
+<tr><td class="line-number">194</td><td class="line-text">
+</td></tr>
+<tr><td class="line-number">195</td><td class="line-text">runloop.run(main())</td></tr>
+</tbody></table>
+  </div>
+
+</body></html>
